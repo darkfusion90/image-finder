@@ -24,12 +24,15 @@ class SearchResultsState extends State<SearchResults> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Center(
-            child: Text(
-              'No results :(',
-              style: TextStyle(fontSize: 22, backgroundColor: Colors.green),
-            ),
-          )
+          Icon(
+            Icons.sentiment_dissatisfied,
+            size: 64.0,
+            color: Colors.grey,
+          ),
+          Text(
+            'No results',
+            style: TextStyle(fontSize: 32.0, color: Colors.grey),
+          ),
         ]);
   }
 
@@ -38,15 +41,20 @@ class SearchResultsState extends State<SearchResults> {
       return _buildEmptySearchResults();
     }
 
+    final int itemCountWithExtraForSpinner = data.length + 1;
     return StaggeredGridView.countBuilder(
       crossAxisCount: 2,
-      itemCount: data.length + 1,
+      itemCount: itemCountWithExtraForSpinner,
       itemBuilder: (context, index) {
         return index == data.length
-            ? Center(child: CircularProgressIndicator())
+            ? Container(
+                child: Center(child: CircularProgressIndicator()),
+                padding: EdgeInsets.all(16.0),
+              )
             : _buildGridTile(data[index]);
       },
-      staggeredTileBuilder: (index) => new StaggeredTile.fit(2),
+      staggeredTileBuilder: (index) =>
+          new StaggeredTile.fit(index == data.length ? 2 : 1),
     );
   }
 
