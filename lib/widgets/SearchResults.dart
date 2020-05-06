@@ -14,29 +14,58 @@ class SearchResults extends StatefulWidget {
 
 class SearchResultsState extends State<SearchResults> {
   Future<List<fromUtils.Image>> _futureImageList;
+  final Set<String> _favorites = new Set<String>();
 
-  Widget _buildImageActions() {
-    return Container(
-        padding: EdgeInsets.all(8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Icon(
-              Icons.favorite,
-              color: Theme.of(context).secondaryHeaderColor,
-            ),
-          ],
-        ));
+  void _addToFavorites(fromUtils.Image image) {
+    setState(() {
+      _favorites.add(image.id);
+    });
   }
 
-  Widget _buildGridTile(img) {
+  void _removeFromFavorites(fromUtils.Image image) {
+    setState(() {
+      _favorites.remove(image.id);
+    });
+  }
+
+  bool _isAddedToFavorites(fromUtils.Image image) {
+    return _favorites.contains(image.id);
+  }
+
+  Widget _buildImageActions(fromUtils.Image image) {
+    bool isAlreadyFavorite = _isAddedToFavorites(image);
+
+    final Widget favoriteIcon = Icon(
+      isAlreadyFavorite ? Icons.favorite : Icons.favorite_border,
+      color: Theme.of(context).secondaryHeaderColor,
+    );
+
+    return Container(
+        child: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Tooltip(
+          child: IconButton(
+            padding: EdgeInsets.all(0),
+            icon: favoriteIcon,
+            onPressed: () => isAlreadyFavorite
+                ? _removeFromFavorites(image)
+                : _addToFavorites(image),
+          ),
+          message: 'Add To Favorites',
+        ),
+      ],
+    ));
+  }
+
+  Widget _buildGridTile(fromUtils.Image image) {
     return Container(
       decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       margin: EdgeInsets.all(8.0),
       child: Column(
         children: <Widget>[
-          Image(image: NetworkImage(img.urls['thumb'])),
-          _buildImageActions()
+          Image(image: NetworkImage(image.urls['thumb'])),
+          _buildImageActions(image)
         ],
       ),
     );
