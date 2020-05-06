@@ -15,8 +15,31 @@ class SearchResults extends StatefulWidget {
 class SearchResultsState extends State<SearchResults> {
   Future<List<fromUtils.Image>> _futureImageList;
 
+  Widget _buildImageActions() {
+    return Container(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Icon(
+              Icons.favorite,
+              color: Theme.of(context).secondaryHeaderColor,
+            ),
+          ],
+        ));
+  }
+
   Widget _buildGridTile(img) {
-    return Image(image: NetworkImage(img.urls['thumb']));
+    return Container(
+      decoration: BoxDecoration(color: Theme.of(context).primaryColor),
+      margin: EdgeInsets.all(8.0),
+      child: Column(
+        children: <Widget>[
+          Image(image: NetworkImage(img.urls['thumb'])),
+          _buildImageActions()
+        ],
+      ),
+    );
   }
 
   Widget _buildEmptySearchResults() {
