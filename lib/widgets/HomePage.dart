@@ -1,18 +1,30 @@
 import 'package:flutter/material.dart';
+
 import 'package:searchimages/widgets/SearchBar.dart';
 import 'package:searchimages/widgets/SearchResults.dart';
 
-class HomePage extends StatelessWidget {
-  void _onSearchBarInputChanged(String value) {
-    print('You typed: ' + value);
+class HomePage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
+  String _searchQuery;
+
+  void _onSearchFormSubmit(String value) {
+    setState(() {
+      _searchQuery = value;
+    });
   }
 
   Widget _buildBody() {
-    return Column(
-      children: <Widget>[
-        SearchBar(this._onSearchBarInputChanged),
-        SearchResults()
-      ],
+    return Container(
+      child: Column(
+        children: <Widget>[
+          SearchBar(this._onSearchFormSubmit),
+          Expanded(child: SearchResults(this._searchQuery))
+        ],
+      ),
     );
   }
 
