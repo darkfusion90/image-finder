@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:searchimages/utils/Image.dart' as fromUtils;
+import 'package:searchimages/models/Image.dart' as models;
 import 'package:searchimages/utils/api.dart' as api;
 
 class SearchResults extends StatefulWidget {
@@ -13,26 +13,26 @@ class SearchResults extends StatefulWidget {
 }
 
 class SearchResultsState extends State<SearchResults> {
-  Future<List<fromUtils.Image>> _futureImageList;
   final Set<String> _favorites = new Set<String>();
+  Future<List<models.Image>> _futureImageList;
 
-  void _addToFavorites(fromUtils.Image image) {
+  void _addToFavorites(models.Image image) {
     setState(() {
       _favorites.add(image.id);
     });
   }
 
-  void _removeFromFavorites(fromUtils.Image image) {
+  void _removeFromFavorites(models.Image image) {
     setState(() {
       _favorites.remove(image.id);
     });
   }
 
-  bool _isAddedToFavorites(fromUtils.Image image) {
+  bool _isAddedToFavorites(models.Image image) {
     return _favorites.contains(image.id);
   }
 
-  Widget _buildImageActions(fromUtils.Image image) {
+  Widget _buildImageActions(models.Image image) {
     bool isAlreadyFavorite = _isAddedToFavorites(image);
 
     final Widget favoriteIcon = Icon(
@@ -58,7 +58,7 @@ class SearchResultsState extends State<SearchResults> {
     ));
   }
 
-  Widget _buildGridTile(fromUtils.Image image) {
+  Widget _buildGridTile(models.Image image) {
     return Container(
       decoration: BoxDecoration(color: Theme.of(context).primaryColor),
       margin: EdgeInsets.all(8.0),
@@ -132,7 +132,7 @@ class SearchResultsState extends State<SearchResults> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<fromUtils.Image>>(
+    return FutureBuilder<List<models.Image>>(
         future: _futureImageList,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
