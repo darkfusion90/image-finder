@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:searchimages/models/Image.dart' as models;
+import 'package:searchimages/models/main.dart' as models;
 import 'package:searchimages/utils/api.dart' as api;
+import 'package:searchimages/controllers/favorites.dart' as favorites;
 
 class SearchResults extends StatefulWidget {
   final String searchQuery;
@@ -13,49 +14,56 @@ class SearchResults extends StatefulWidget {
 }
 
 class SearchResultsState extends State<SearchResults> {
-  final Set<String> _favorites = new Set<String>();
   Future<List<models.Image>> _futureImageList;
+  List<models.Favorite> _favoritesList = new List<models.Favorite>();
 
-  void _addToFavorites(models.Image image) {
-    setState(() {
-      _favorites.add(image.id);
-    });
+  void _addToFavorites(models.Image image) async {
+    await favorites.createFavorite(image);
+    _refreshFavorites();
   }
 
-  void _removeFromFavorites(models.Image image) {
-    setState(() {
-      _favorites.remove(image.id);
-    });
+  void _removeFromFavorites(models.Image image) async {
+    await favorites.deleteFavorite(image);
+    _refreshFavorites();
   }
 
   bool _isAddedToFavorites(models.Image image) {
-    return _favorites.contains(image.id);
+    print('check for ${image.id} in $_favoritesList');
+    models.Favorite result = _favoritesList.singleWhere(
+      (models.Favorite fav) => fav.imageId.compareTo(image.id) == 0,
+      orElse: () => null,
+    );
+    return result != null;
   }
 
   Widget _buildImageActions(models.Image image) {
     bool isAlreadyFavorite = _isAddedToFavorites(image);
 
-    final Widget favoriteIcon = Icon(
-      isAlreadyFavorite ? Icons.favorite : Icons.favorite_border,
-      color: Theme.of(context).secondaryHeaderColor,
-    );
+    Icon getFavoriteIcon() {
+      return Icon(isAlreadyFavorite ? Icons.favorite : Icons.favorite_border);
+    }
 
-    return Container(
-        child: Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
+    List<Widget> getActions() {
+      return [
         Tooltip(
           child: IconButton(
             padding: EdgeInsets.all(0),
-            icon: favoriteIcon,
+            icon: getFavoriteIcon(),
             onPressed: () => isAlreadyFavorite
                 ? _removeFromFavorites(image)
                 : _addToFavorites(image),
           ),
           message: 'Add To Favorites',
-        ),
-      ],
-    ));
+        )
+      ];
+    }
+
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: getActions(),
+      ),
+    );
   }
 
   Widget _buildGridTile(models.Image image) {
@@ -110,6 +118,15 @@ class SearchResultsState extends State<SearchResults> {
     );
   }
 
+  void _refreshFavorites() async {
+    final List<models.Favorite> newFavorites =
+        await favorites.getAllFavorites();
+
+    setState(() {
+      _favoritesList = List<models.Favorite>.from(newFavorites);
+    });
+  }
+
   @override
   void didUpdateWidget(SearchResults oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -138,6 +155,7 @@ class SearchResultsState extends State<SearchResults> {
           if (snapshot.hasData) {
             return _buildData(snapshot.data);
           } else if (snapshot.hasError) {
+            print('Error: ${snapshot.error}');
             return Center(child: Text('${snapshot.error}'));
           }
 
