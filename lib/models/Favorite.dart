@@ -1,13 +1,30 @@
-import 'package:uuid/uuid.dart' show Uuid;
-import 'package:searchimages/models/Image.dart' show Image;
-
 class Favorite {
-  final String _id = Uuid().v1();
-  final Image image;
+  int id;
+  final String imageId;
 
-  Favorite(this.image);
+  Favorite(this.imageId, {this.id});
+
+  void setId(int id) {
+    this.id = id;
+  }
 
   Map<String, dynamic> toMap() {
-    return {'id': _id, 'image': image};
+    return {'id': id, 'image': imageId};
+  }
+
+  static Favorite fromMap(Map<String, dynamic> map) {
+    return Favorite(map['image'], id: map['id']);
+  }
+
+  static List<Favorite> fromMaps(List<Map<String, dynamic>> maps) {
+    return List<Favorite>.generate(
+      maps.length,
+      (index) => fromMap(maps[index]),
+    );
+  }
+
+  @override
+  String toString() {
+    return "{'id': $id, 'image': $imageId}\n";
   }
 }
