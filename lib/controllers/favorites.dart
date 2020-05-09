@@ -9,7 +9,7 @@ const String TABLE_NAME = 'favorites';
 Future<sqlite.Database> init() async {
   final sqlite.Database db = await initDb().getDatabase();
   await db.execute(
-    'CREATE TABLE IF NOT EXISTS $TABLE_NAME(id INTEGER PRIMARY KEY AUTOINCREMENT, image VARCHAR(255) NOT NULL)',
+    'CREATE TABLE IF NOT EXISTS $TABLE_NAME(id INTEGER PRIMARY KEY AUTOINCREMENT, image VARCHAR(255) UNIQUE NOT NULL)',
   );
 
   return db;
