@@ -1,3 +1,5 @@
+enum ImageUrlTypes { RAW, FULL, REGULAR, SMALL, THUMB }
+
 class Image {
   final String id;
   final String altDesc;
@@ -15,6 +17,23 @@ class Image {
       jsonList.length,
       (index) => Image.fromJson(jsonList[index]),
     );
+  }
+
+  String getUrl(ImageUrlTypes urlType) {
+    switch (urlType) {
+      case ImageUrlTypes.RAW:
+        return this.urls['raw'];
+      case ImageUrlTypes.REGULAR:
+        return this.urls['regular'];
+      case ImageUrlTypes.FULL:
+        return this.urls['full'];
+      case ImageUrlTypes.SMALL:
+        return this.urls['small'];
+      case ImageUrlTypes.THUMB:
+        return this.urls['thumb'];
+      default:
+        throw new Exception('Invalid urlType: $urlType');
+    }
   }
 
   @override
