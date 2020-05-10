@@ -17,12 +17,22 @@ class HomePageState extends State<HomePage> {
     });
   }
 
+  Widget _buildEmptySearchQueryResult() {
+    return Container(
+        child: Center(
+            child: Text('Type something in the search bar to search for')));
+  }
+
   Widget _buildBody() {
     return Container(
       child: Column(
         children: <Widget>[
           SearchBar(this._onSearchFormSubmit),
-          Expanded(child: SearchResults(this._searchQuery))
+          Expanded(
+            child: (_searchQuery ?? '').isEmpty
+                ? _buildEmptySearchQueryResult()
+                : SearchResults(this._searchQuery),
+          )
         ],
       ),
     );
