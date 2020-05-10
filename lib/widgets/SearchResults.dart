@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
 import 'package:searchimages/models/main.dart' as models;
 import 'package:searchimages/utils/api.dart' as api;
-import 'image_container/ImageContainer.dart' show ImageContainer;
+import 'package:searchimages/widgets/ImageGridView.dart';
 
 class SearchResults extends StatefulWidget {
   final String searchQuery;
@@ -21,7 +21,7 @@ class SearchResultsState extends State<SearchResults> {
     if (!_isSearchQueryEmpty()) {
       _futureImageList = api.fetchImages(widget.searchQuery);
     }
-    
+
     super.initState();
   }
 
@@ -47,10 +47,12 @@ class SearchResultsState extends State<SearchResults> {
 
   @override
   Widget build(BuildContext context) {
-    print('Future: $_futureImageList');
     return FutureBuilder<List<models.Image>>(
         future: _futureImageList,
         builder: (context, snapshot) {
+          if (_isSearchQueryEmpty()) {
+            return _buildInitialState();
+          }
           if (snapshot.connectionState != ConnectionState.done) {
             return _buildLoader();
           }
@@ -64,6 +66,10 @@ class SearchResultsState extends State<SearchResults> {
 
           return _buildEmptySearchResults();
         });
+  }
+
+  Widget _buildData(List<models.Image> data) {
+    return data.isEmpty ? _buildEmptySearchResults() : ImageGridView(data);
   }
 
   Widget _buildLoader() {
@@ -87,40 +93,10 @@ class SearchResultsState extends State<SearchResults> {
         ]);
   }
 
-  Widget _buildAdditionalImageLoader() {
-    return Container(
-      child: Center(child: CircularProgressIndicator()),
-      padding: EdgeInsets.all(16.0),
-    );
-  }
-
   Widget _buildInitialState() {
     return Container(
       child: Center(child: Text('Type something in the search bar')),
       padding: EdgeInsets.all(16.0),
-    );
-  }
-
-  Widget _buildData(data) {
-    if (_isSearchQueryEmpty()) {
-      return _buildInitialState();
-    }
-
-    if (data.isEmpty) {
-      return _buildEmptySearchResults();
-    }
-
-    final int itemCountWithExtraForSpinner = data.length + 1;
-    return StaggeredGridView.countBuilder(
-      crossAxisCount: 2,
-      itemCount: itemCountWithExtraForSpinner,
-      itemBuilder: (context, index) {
-        return index == data.length
-            ? _buildAdditionalImageLoader()
-            : ImageContainer(data[index]);
-      },
-      staggeredTileBuilder: (index) =>
-          new StaggeredTile.fit(index == data.length ? 2 : 1),
     );
   }
 
