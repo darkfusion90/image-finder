@@ -10,20 +10,26 @@ String constructUrl(subUrl) {
   return UNSPLASH_HOME + subUrl + '&client_id=' + ACCESS_TOKEN;
 }
 
-Future<http.Response> _searchImages(String query) {
-  return http.get(constructUrl('/search/photos/?query=' + query));
+Future<http.Response> _searchImages(String query, int pageNumber) {
+  return http.get(constructUrl('/search/photos/?query=$query&page=$pageNumber'));
 }
 
-Future<List<models.Image>> fetchImages(String query) async {
-  final response = await _searchImages(query);
+Future<List<models.Image>> fetchImages(String query, int pageNumber) async {
+  final response = await _searchImages(query, pageNumber);
 
-  if (response.statusCode == 200) {
-    final responseJson = jsonDecode(response.body);
+  try {
+    if (response.statusCode == 200) {
+      final responseJson = jsonDecode(response.body);
 
-    List<dynamic> decodedJsonResults = responseJson['results'];
-
-    return models.Image.fromJsonList(decodedJsonResults);
-  } else {
-    throw Exception('error fetching images: ' + response.body);
+      List<dynamic> decodedJsonResults = responseJson['results'];
+      List<models.Image> images =
+          decodedJsonResults.map((res) => models.Image.fromJson(res)).toList();
+    print('images: $images');
+      return images;
+    } else {
+      throw Exception('error fetching images: ' + response.body);
+    }
+  } catch (on, stackTrace) {
+    print('Exception: $on\nStack Trace: $stackTrace');
   }
 }
