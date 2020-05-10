@@ -12,7 +12,7 @@ class ImageContainer extends StatelessWidget {
 
   Widget _buildImageLoadingPlaceholder(BuildContext context, String url) {
     return Container(
-      child: Text(_image.altDesc),
+      child: Text(_image.altDesc ?? ''),
       color: Colors.deepOrange,
       width: _image.getWidth(urlType: ImageUrlTypes.THUMB).toDouble(),
       height: _image.getHeight(urlType: ImageUrlTypes.THUMB).toDouble(),
