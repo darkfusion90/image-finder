@@ -14,12 +14,14 @@ class SearchResults extends StatefulWidget {
 }
 
 class SearchResultsState extends State<SearchResults> {
-  Future<List<models.Image>> _futureImageList;
+  bool _isLoadingData = false;
+  int _pageNumber = 1;
+  List<models.Image> _imageList = new List<models.Image>();
 
   @override
   void initState() {
     if (!_isSearchQueryEmpty()) {
-      _futureImageList = api.fetchImages(widget.searchQuery);
+      fetchInitialData();
     }
 
     super.initState();
@@ -30,46 +32,32 @@ class SearchResultsState extends State<SearchResults> {
     super.didUpdateWidget(oldWidget);
 
     bool didQueryUpdate() {
-      final String prevSearchQuery =
-          oldWidget.searchQuery == null ? '' : oldWidget.searchQuery;
-      final String currentSearchQuery =
-          widget.searchQuery == null ? '' : widget.searchQuery;
+      final String prevSearchQuery = oldWidget.searchQuery ?? '';
+      final String currentSearchQuery = widget.searchQuery ?? '';
 
       return currentSearchQuery.compareTo(prevSearchQuery) != 0;
     }
 
     if (didQueryUpdate() && !_isSearchQueryEmpty()) {
-      setState(() {
-        _futureImageList = api.fetchImages(widget.searchQuery);
-      });
+      _fetchMoreData();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<models.Image>>(
-        future: _futureImageList,
-        builder: (context, snapshot) {
-          if (_isSearchQueryEmpty()) {
-            return _buildInitialState();
-          }
-          if (snapshot.connectionState != ConnectionState.done) {
-            return _buildLoader();
-          }
-          if (snapshot.hasData) {
-            return _buildData(snapshot.data);
-          }
-          if (snapshot.hasError) {
-            print('Error: ${snapshot.error}');
-            return Center(child: Text('${snapshot.error}'));
-          }
+    if (_isSearchQueryEmpty()) {
+      return _buildInitialState();
+    }
 
-          return _buildEmptySearchResults();
-        });
-  }
+    if (_isLoadingData && _imageList.isEmpty) {
+      return _buildLoader();
+    }
 
-  Widget _buildData(List<models.Image> data) {
-    return data.isEmpty ? _buildEmptySearchResults() : ImageGridView(data);
+    if (_imageList.isEmpty) {
+      return _buildEmptySearchResults();
+    }
+
+    return ImageGridView(_imageList, this._fetchMoreData);
   }
 
   Widget _buildLoader() {
@@ -98,6 +86,36 @@ class SearchResultsState extends State<SearchResults> {
       child: Center(child: Text('Type something in the search bar')),
       padding: EdgeInsets.all(16.0),
     );
+  }
+
+  void _fetchMoreData() async {
+    setState(() {
+      _isLoadingData = true;
+      _pageNumber += 1;
+    });
+
+    List<models.Image> newData =
+        await api.fetchImages(widget.searchQuery, _pageNumber);
+
+    setState(() {
+      _imageList.addAll(newData);
+      _isLoadingData = false;
+    });
+  }
+
+  void fetchInitialData() async {
+    _isLoadingData = true;
+
+    List<models.Image> newData =
+        await api.fetchImages(widget.searchQuery, _pageNumber);
+
+    if (this.mounted) {
+      print('mounted!');
+      setState(() {
+        _imageList.addAll(newData);
+        _isLoadingData = false;
+      });
+    }
   }
 
   bool _isSearchQueryEmpty() {
