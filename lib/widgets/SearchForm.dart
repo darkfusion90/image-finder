@@ -13,17 +13,22 @@ class SearchFormState extends State<SearchForm> {
   final _formKey = GlobalKey<FormState>();
   final _searchQueryController = TextEditingController();
 
+  void _removeFocusFromSearchField(){
+    FocusScope.of(context).requestFocus(FocusNode());
+  }
+  
   Widget _buildSearchQueryField() {
     return TextFormField(
       decoration: InputDecoration(hintText: 'Type something to search for'),
       controller: _searchQueryController,
     );
   }
-
+  
   Widget _buildSubmitButton() {
     return IconButton(
       icon: Icon(Icons.search),
       onPressed: () {
+        _removeFocusFromSearchField();
         widget._onFormSubmit(_searchQueryController.text);
       },
     );
