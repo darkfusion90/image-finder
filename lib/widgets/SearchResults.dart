@@ -36,9 +36,34 @@ class SearchResultsState extends State<SearchResults> {
     }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    print('Future: $_futureImageList');
+    return FutureBuilder<List<models.Image>>(
+        future: _futureImageList,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return _buildLoader();
+          }
+          if (snapshot.hasData) {
+            return _buildData(snapshot.data);
+          }
+          if (snapshot.hasError) {
+            print('Error: ${snapshot.error}');
+            return Center(child: Text('${snapshot.error}'));
+          }
+
+          return _buildEmptySearchResults();
+        });
+  }
+
   bool _isSearchQueryEmpty() {
     final String searchQuery = widget.searchQuery ?? '';
     return searchQuery.isEmpty;
+  }
+
+  Widget _buildLoader() {
+    return Center(child: CircularProgressIndicator());
   }
 
   Widget _buildEmptySearchResults() {
@@ -93,21 +118,5 @@ class SearchResultsState extends State<SearchResults> {
       staggeredTileBuilder: (index) =>
           new StaggeredTile.fit(index == data.length ? 2 : 1),
     );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<List<models.Image>>(
-        future: _futureImageList,
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return _buildData(snapshot.data);
-          } else if (snapshot.hasError) {
-            print('Error: ${snapshot.error}');
-            return Center(child: Text('${snapshot.error}'));
-          }
-
-          return Center(child: CircularProgressIndicator());
-        });
   }
 }
