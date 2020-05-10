@@ -17,6 +17,15 @@ class SearchResultsState extends State<SearchResults> {
   Future<List<models.Image>> _futureImageList;
 
   @override
+  void initState() {
+    if (!_isSearchQueryEmpty()) {
+      _futureImageList = api.fetchImages(widget.searchQuery);
+    }
+    
+    super.initState();
+  }
+
+  @override
   void didUpdateWidget(SearchResults oldWidget) {
     super.didUpdateWidget(oldWidget);
 
@@ -29,7 +38,7 @@ class SearchResultsState extends State<SearchResults> {
       return currentSearchQuery.compareTo(prevSearchQuery) != 0;
     }
 
-    if (didQueryUpdate()) {
+    if (didQueryUpdate() && !_isSearchQueryEmpty()) {
       setState(() {
         _futureImageList = api.fetchImages(widget.searchQuery);
       });
@@ -57,11 +66,6 @@ class SearchResultsState extends State<SearchResults> {
         });
   }
 
-  bool _isSearchQueryEmpty() {
-    final String searchQuery = widget.searchQuery ?? '';
-    return searchQuery.isEmpty;
-  }
-
   Widget _buildLoader() {
     return Center(child: CircularProgressIndicator());
   }
@@ -83,7 +87,7 @@ class SearchResultsState extends State<SearchResults> {
         ]);
   }
 
-  Widget _buildLoadingScreen() {
+  Widget _buildAdditionalImageLoader() {
     return Container(
       child: Center(child: CircularProgressIndicator()),
       padding: EdgeInsets.all(16.0),
@@ -112,11 +116,15 @@ class SearchResultsState extends State<SearchResults> {
       itemCount: itemCountWithExtraForSpinner,
       itemBuilder: (context, index) {
         return index == data.length
-            ? _buildLoadingScreen()
+            ? _buildAdditionalImageLoader()
             : ImageContainer(data[index]);
       },
       staggeredTileBuilder: (index) =>
           new StaggeredTile.fit(index == data.length ? 2 : 1),
     );
+  }
+
+  bool _isSearchQueryEmpty() {
+    return (widget.searchQuery ?? '').trim().isEmpty;
   }
 }
