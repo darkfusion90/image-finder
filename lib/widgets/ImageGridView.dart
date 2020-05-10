@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
+import'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-import 'image_container/ImageContainer.dart' show ImageContainer;
+import 'image_grid_tile/ImageGridTile.dart' show ImageGridTile;
 import 'package:searchimages/models/main.dart' as models;
 
 class ImageGridView extends StatefulWidget {
@@ -39,7 +39,7 @@ class _ImageGridViewState extends State<ImageGridView> {
   Widget _buildGridTile(BuildContext context, int index) {
     return index == widget._imageList.length
         ? _buildLoaderFooter()
-        : ImageContainer(widget._imageList[index]);
+        : ImageGridTile(widget._imageList[index]);
   }
 
   Widget _buildLoaderFooter() {
