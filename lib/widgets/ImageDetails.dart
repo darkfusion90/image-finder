@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:searchimages/models/main.dart' as models;
 import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
 import 'package:searchimages/widgets/ImageContainer.dart';
+import 'package:searchimages/widgets/dialogs/image_download/ImageDownloadDialog.dart';
 
 class ImageDetails extends StatefulWidget {
   final models.Image _image;
@@ -36,15 +37,34 @@ class _ImageDetailsState extends State<ImageDetails> {
     SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
+  void _onDownloadButtonPressed(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext builderContext) => ImageDownloadDialog(widget._image),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.black),
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        actions: _buildAppBarActions(context),
+      ),
       body: GestureDetector(
         child: _buildContent(context),
         onTap: _hideDeviceStatusBar,
       ),
     );
+  }
+
+  List<Widget> _buildAppBarActions(BuildContext context) {
+    return [
+      IconButton(
+        icon: Icon(Icons.save_alt),
+        onPressed: () => _onDownloadButtonPressed(context),
+      )
+    ];
   }
 
   Widget _buildContent(BuildContext context) {
