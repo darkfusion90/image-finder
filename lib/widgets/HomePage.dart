@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import 'package:searchimages/widgets/SearchBar.dart';
 import 'package:searchimages/widgets/SearchResults.dart';
+import 'package:searchimages/widgets/BaseAppBar.dart';
+import 'package:searchimages/widgets/bottomNavBar/AppBottomNavigationBar.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -19,8 +22,9 @@ class HomePageState extends State<HomePage> {
 
   Widget _buildEmptySearchQueryResult() {
     return Container(
-        child: Center(
-            child: Text('Type something in the search bar to search for')));
+      child:
+          Center(child: Text('Type something in the search bar to search for')),
+    );
   }
 
   Widget _buildBody() {
@@ -41,10 +45,9 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Image Finder - Home'),
-      ),
+      appBar: buildAppBar(),
       body: _buildBody(),
+      bottomNavigationBar: AppBottomNavigationBar(),
     );
   }
 }
