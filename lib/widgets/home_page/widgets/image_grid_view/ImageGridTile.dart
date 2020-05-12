@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:searchimages/models/main.dart' as models;
 import 'package:searchimages/router/router.dart';
-import 'package:searchimages/widgets/ImageContainer.dart';
-import 'ImageActions.dart' show ImageActions;
+import 'package:searchimages/widgets/generic/image_container/ImageContainer.dart';
+import '../../../generic/image_container/ImageActions.dart' show ImageActions;
 
 class ImageGridTile extends StatelessWidget {
   final models.Image _image;

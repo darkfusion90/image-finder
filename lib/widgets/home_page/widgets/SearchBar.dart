@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:searchimages/widgets/SearchForm.dart';
+import 'package:searchimages/widgets/home_page/widgets/SearchForm.dart';
 
 class SearchBar extends StatelessWidget {
   final ValueChanged<String> _onSearchFormSubmit;

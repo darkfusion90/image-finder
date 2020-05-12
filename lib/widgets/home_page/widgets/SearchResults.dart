@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:searchimages/models/main.dart' as models;
 import 'package:searchimages/utils/api.dart' as api;
-import 'package:searchimages/widgets/ImageGridView.dart';
+import 'package:searchimages/widgets/home_page/widgets/image_grid_view/ImageGridView.dart';
 
 class SearchResults extends StatefulWidget {
   final String searchQuery;

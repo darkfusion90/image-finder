@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:searchimages/widgets/SearchBar.dart';
-import 'package:searchimages/widgets/SearchResults.dart';
-import 'package:searchimages/widgets/BaseAppBar.dart';
-import 'package:searchimages/widgets/bottomNavBar/AppBottomNavigationBar.dart';
+import 'widgets/SearchBar.dart';
+import 'widgets/SearchResults.dart';
+import 'package:searchimages/widgets/navs/appbar/BaseAppBar.dart';
+import 'package:searchimages/widgets/navs/bottom_nav_bar/AppBottomNavigationBar.dart';
 
 class HomePage extends StatefulWidget {
   @override

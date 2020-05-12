@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:searchimages/widgets/bottomNavBar/BaseBottomNavItem.dart';
+import 'BaseBottomNavItem.dart';
 
 class BottomNavItemFavorites extends BaseBottomNavItem {
   @override

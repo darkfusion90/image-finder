@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:searchimages/widgets/bottomNavBar/BaseBottomNavItem.dart';
-import 'package:searchimages/widgets/bottomNavBar/BottomNavItem-Downloads.dart';
 
+import 'BaseBottomNavItem.dart';
 import 'BottomNavItem-Home.dart';
 import 'BottomNavItem-Favorites.dart';
+import 'BottomNavItem-Downloads.dart';
 
 class AppBottomNavigationBar extends StatefulWidget {
   @override
