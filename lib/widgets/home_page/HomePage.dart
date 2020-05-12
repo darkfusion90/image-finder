@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'widgets/SearchBar.dart';
 import 'widgets/SearchResults.dart';
-import 'package:searchimages/widgets/navs/appbar/BaseAppBar.dart';
+import 'package:searchimages/widgets/navs/appbar/AppBar-Home.dart';
 import 'package:searchimages/widgets/navs/bottom_nav_bar/AppBottomNavigationBar.dart';
 
 class HomePage extends StatefulWidget {
@@ -44,7 +44,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BaseAppBar(title: Text('Image Finder')),
+      appBar: AppBarHome(),
       body: _buildBody(),
       bottomNavigationBar: AppBottomNavigationBar(),
     );

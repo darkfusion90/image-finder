@@ -5,7 +5,7 @@ import 'package:searchimages/models/main.dart' as models;
 import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
 import 'package:searchimages/widgets/generic/image_container/ImageContainer.dart';
 import 'package:searchimages/widgets/dialogs/image_download/ImageDownloadDialog.dart';
-import 'package:searchimages/widgets/navs/appbar/BaseAppBar.dart';
+import 'package:searchimages/widgets/navs/appbar/AppBar-ImageDetails.dart';
 
 class ImageDetails extends StatelessWidget {
   final models.Image _image;
@@ -22,23 +22,15 @@ class ImageDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: BaseAppBar(
-        backgroundColor: Colors.black,
-        actions: _buildAppBarActions(context),
+      appBar: AppBarImageDetails(
+        onActionDownloadPressed: (BuildContext context) {
+          _onDownloadButtonPressed(context);
+        },
       ),
       body: _buildContent(context),
     );
   }
-
-  List<Widget> _buildAppBarActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: Icon(Icons.save_alt),
-        onPressed: () => _onDownloadButtonPressed(context),
-      )
-    ];
-  }
-
+  
   Widget _buildContent(BuildContext context) {
     return Container(
       color: Colors.black,
