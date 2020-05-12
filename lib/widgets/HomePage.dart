@@ -5,7 +5,6 @@ import 'package:searchimages/widgets/SearchResults.dart';
 import 'package:searchimages/widgets/BaseAppBar.dart';
 import 'package:searchimages/widgets/bottomNavBar/AppBottomNavigationBar.dart';
 
-
 class HomePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => HomePageState();
@@ -45,7 +44,7 @@ class HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: BaseAppBar(title: Text('Image Finder')),
       body: _buildBody(),
       bottomNavigationBar: AppBottomNavigationBar(),
     );
