@@ -5,6 +5,7 @@ import 'package:searchimages/models/main.dart' as models;
 import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
 import 'package:searchimages/widgets/generic/image_container/ImageContainer.dart';
 import 'package:searchimages/widgets/dialogs/image_download/ImageDownloadDialog.dart';
+import 'package:searchimages/widgets/navs/appbar/BaseAppBar.dart';
 
 class ImageDetails extends StatelessWidget {
   final models.Image _image;
@@ -14,14 +15,14 @@ class ImageDetails extends StatelessWidget {
   void _onDownloadButtonPressed(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext builderContext) => ImageDownloadDialog(_image),
+      builder: (_) => ImageDownloadDialog(_image),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: BaseAppBar(
         backgroundColor: Colors.black,
         actions: _buildAppBarActions(context),
       ),
