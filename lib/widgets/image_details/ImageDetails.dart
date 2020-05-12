@@ -7,40 +7,15 @@ import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
 import 'package:searchimages/widgets/generic/image_container/ImageContainer.dart';
 import 'package:searchimages/widgets/dialogs/image_download/ImageDownloadDialog.dart';
 
-class ImageDetails extends StatefulWidget {
+class ImageDetails extends StatelessWidget {
   final models.Image _image;
 
   ImageDetails(this._image);
 
-  @override
-  State<StatefulWidget> createState() => _ImageDetailsState();
-}
-
-class _ImageDetailsState extends State<ImageDetails> {
-  @override
-  void initState() {
-    super.initState();
-    _hideDeviceStatusBar();
-  }
-
-  @override
-  void dispose() {
-    _showDeviceStatusBar();
-    super.dispose();
-  }
-
-  void _hideDeviceStatusBar() {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-  }
-
-  void _showDeviceStatusBar() {
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-  }
-
   void _onDownloadButtonPressed(BuildContext context) {
     showDialog(
       context: context,
-      builder: (BuildContext builderContext) => ImageDownloadDialog(widget._image),
+      builder: (BuildContext builderContext) => ImageDownloadDialog(_image),
     );
   }
 
@@ -51,10 +26,7 @@ class _ImageDetailsState extends State<ImageDetails> {
         backgroundColor: Colors.black,
         actions: _buildAppBarActions(context),
       ),
-      body: GestureDetector(
-        child: _buildContent(context),
-        onTap: _hideDeviceStatusBar,
-      ),
+      body: _buildContent(context),
     );
   }
 
@@ -72,7 +44,7 @@ class _ImageDetailsState extends State<ImageDetails> {
       color: Colors.black,
       child: Center(
         child: ImageContainer(
-          widget._image,
+          _image,
           imageDisplaySize: ImageUrlTypes.SMALL,
         ),
       ),
