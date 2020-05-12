@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:searchimages/models/main.dart' as models;
 import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
