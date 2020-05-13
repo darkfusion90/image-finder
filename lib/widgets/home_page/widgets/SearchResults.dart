@@ -21,7 +21,7 @@ class SearchResultsState extends State<SearchResults> {
   @override
   void initState() {
     if (!_isSearchQueryEmpty()) {
-      fetchInitialData();
+      _fetchData(isInitial: true);
     }
 
     super.initState();
@@ -31,15 +31,8 @@ class SearchResultsState extends State<SearchResults> {
   void didUpdateWidget(SearchResults oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    bool didQueryUpdate() {
-      final String prevSearchQuery = oldWidget.searchQuery ?? '';
-      final String currentSearchQuery = widget.searchQuery ?? '';
-
-      return currentSearchQuery.compareTo(prevSearchQuery) != 0;
-    }
-
-    if (didQueryUpdate() && !_isSearchQueryEmpty()) {
-      _fetchMoreData();
+    if (!_isSearchQueryEmpty()) {
+      _fetchData(shouldFetchFreshData: true);
     }
   }
 
@@ -57,7 +50,7 @@ class SearchResultsState extends State<SearchResults> {
       return _buildEmptySearchResults();
     }
 
-    return ImageGridView(_imageList, this._fetchMoreData);
+    return ImageGridView(_imageList, _fetchData);
   }
 
   Widget _buildLoader() {
@@ -88,37 +81,42 @@ class SearchResultsState extends State<SearchResults> {
     );
   }
 
-  void _fetchMoreData() async {
-    setState(() {
-      _isLoadingData = true;
-      _pageNumber += 1;
-    });
-
-    List<models.Image> newData =
-        await api.fetchImages(widget.searchQuery, _pageNumber);
-
-    setState(() {
-      _imageList.addAll(newData);
-      _isLoadingData = false;
-    });
+  bool _isSearchQueryEmpty() {
+    return (widget.searchQuery ?? '').trim().isEmpty;
   }
 
-  void fetchInitialData() async {
-    _isLoadingData = true;
+  void _fetchData({
+    bool isInitial = false,
+    bool shouldFetchFreshData = false,
+  }) async {
+    if (isInitial) {
+      _isLoadingData = true;
+    } else {
+      _setStateBeforeLoading(shouldFetchFreshData || isInitial);
+    }
 
     List<models.Image> newData =
         await api.fetchImages(widget.searchQuery, _pageNumber);
 
     if (this.mounted) {
-      print('mounted!');
-      setState(() {
-        _imageList.addAll(newData);
-        _isLoadingData = false;
-      });
+      _setStateAfterLoading(newData);
     }
   }
 
-  bool _isSearchQueryEmpty() {
-    return (widget.searchQuery ?? '').trim().isEmpty;
+  void _setStateAfterLoading(List<models.Image> data) {
+    setState(() {
+      _imageList.addAll(data);
+      _isLoadingData = false;
+    });
+  }
+
+  void _setStateBeforeLoading(bool shouldClearPrevResults) {
+    setState(() {
+      if (shouldClearPrevResults) {
+        _imageList.clear();
+      }
+      _isLoadingData = true;
+      _pageNumber += 1;
+    });
   }
 }
