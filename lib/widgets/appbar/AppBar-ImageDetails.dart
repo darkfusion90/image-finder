@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:searchimages/widgets/navs/appbar/BaseAppBar.dart';
+import 'package:searchimages/widgets/appbar/BaseAppBar.dart';
 
 class AppBarImageDetails extends BaseAppBar {
   final void Function(BuildContext context) onActionDownloadPressed;
 
   AppBarImageDetails({@required this.onActionDownloadPressed});
 
+  @override
+  State<StatefulWidget> createState() => _AppBarDownloadsState();
+}
+
+class _AppBarDownloadsState extends State<AppBarImageDetails> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -21,7 +26,7 @@ class AppBarImageDetails extends BaseAppBar {
   Widget _buildActionDownload(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.save_alt),
-      onPressed: () => this.onActionDownloadPressed(context),
+      onPressed: () => widget.onActionDownloadPressed(context),
     );
   }
 }
