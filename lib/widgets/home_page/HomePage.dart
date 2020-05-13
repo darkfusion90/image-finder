@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:searchimages/utils/widget-based.dart';
 
-import 'widgets/SearchBar.dart';
 import 'widgets/SearchResults.dart';
-import 'package:searchimages/widgets/navs/appbar/AppBar-Home.dart';
-import 'package:searchimages/widgets/navs/bottom_nav_bar/AppBottomNavigationBar.dart';
+import 'package:searchimages/widgets/appbar/AppBar-Home.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -13,7 +12,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> {
   String _searchQuery;
 
-  void _onSearchFormSubmit(String value) {
+  void _onSearchQuerySet(String value) {
     setState(() {
       _searchQuery = value;
     });
@@ -28,25 +27,20 @@ class HomePageState extends State<HomePage> {
 
   Widget _buildBody() {
     return Container(
-      child: Column(
-        children: <Widget>[
-          SearchBar(this._onSearchFormSubmit),
-          Expanded(
-            child: (_searchQuery ?? '').isEmpty
-                ? _buildEmptySearchQueryResult()
-                : SearchResults(this._searchQuery),
-          )
-        ],
-      ),
+      child: (_searchQuery ?? '').isEmpty
+          ? _buildEmptySearchQueryResult()
+          : SearchResults(this._searchQuery),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarHome(),
-      body: _buildBody(),
-      bottomNavigationBar: AppBottomNavigationBar(),
+      appBar: AppBarHome(onSearchQuerySet: _onSearchQuerySet),
+      body: GestureDetector(
+        child: _buildBody(),
+        onTap: () => requestFocus(context),
+      ),
     );
   }
 }
