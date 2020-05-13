@@ -3,6 +3,8 @@ import 'package:searchimages/utils/widget-based.dart';
 
 import 'widgets/SearchResults.dart';
 import 'package:searchimages/widgets/appbar/AppBar-Home.dart';
+import 'package:searchimages/models/main.dart' as models;
+import 'package:searchimages/utils/api.dart' as api;
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,11 +13,21 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   String _searchQuery;
+  bool _isLoadingData = false;
+  int _pageNumber = 1;
+  List<models.Image> _imageList = new List<models.Image>();
 
-  void _onSearchQuerySet(String value) {
-    setState(() {
-      _searchQuery = value;
-    });
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBarHome(
+        onSearchButtonPressed: _handleOnSearchButtonPressed,
+      ),
+      body: GestureDetector(
+        child: _buildBody(),
+        onTap: () => requestFocus(context),
+      ),
+    );
   }
 
   Widget _buildEmptySearchQueryResult() {
@@ -27,20 +39,56 @@ class HomePageState extends State<HomePage> {
 
   Widget _buildBody() {
     return Container(
-      child: (_searchQuery ?? '').isEmpty
+      child: _isSearchQueryEmpty()
           ? _buildEmptySearchQueryResult()
-          : SearchResults(this._searchQuery),
+          : SearchResults(
+              imageList: _imageList,
+              isLoadingData: _isLoadingData,
+              onFetchMoreDataRequested: _fetchData,
+            ),
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBarHome(onSearchQuerySet: _onSearchQuerySet),
-      body: GestureDetector(
-        child: _buildBody(),
-        onTap: () => requestFocus(context),
-      ),
-    );
+  void _handleOnSearchButtonPressed(String searchQuery) {
+    setState(() {
+      _searchQuery = searchQuery;
+    });
+
+    if (!_isSearchQueryEmpty()) {
+      _fetchData(shouldFetchFreshData: true);
+    }
+  }
+
+  void _fetchData({bool shouldFetchFreshData = false}) async {
+    _setStateBeforeLoading(shouldFetchFreshData);
+
+    List newData = await api.fetchImages(_searchQuery, _pageNumber);
+
+    _setStateAfterLoading(newData);
+  }
+
+  void _setStateBeforeLoading(bool shouldClearPrevResults) {
+    if (!this.mounted) return;
+
+    setState(() {
+      if (shouldClearPrevResults) {
+        _imageList.clear();
+      }
+      _isLoadingData = true;
+      _pageNumber += 1;
+    });
+  }
+
+  void _setStateAfterLoading(List<models.Image> data) {
+    if (!this.mounted) return;
+
+    setState(() {
+      _imageList.addAll(data);
+      _isLoadingData = false;
+    });
+  }
+
+  bool _isSearchQueryEmpty() {
+    return (_searchQuery ?? '').isEmpty;
   }
 }
