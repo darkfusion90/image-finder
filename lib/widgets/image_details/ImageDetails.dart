@@ -5,7 +5,7 @@ import 'package:searchimages/models/main.dart' as models;
 import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
 import 'package:searchimages/widgets/generic/image_container/ImageContainer.dart';
 import 'package:searchimages/widgets/dialogs/image_download/ImageDownloadDialog.dart';
-import 'package:searchimages/widgets/navs/appbar/AppBar-ImageDetails.dart';
+import 'package:searchimages/widgets/appbar/AppBar-ImageDetails.dart';
 
 class ImageDetails extends StatelessWidget {
   final models.Image _image;
