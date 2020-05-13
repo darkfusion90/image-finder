@@ -46,7 +46,6 @@ class _ImageActionsState extends State<ImageActions> {
   Icon _getFavoriteIcon() {
     return Icon(
       this._isAlreadyFavorite ? Icons.favorite : Icons.favorite_border,
-      color: Colors.white,
     );
   }
 
