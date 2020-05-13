@@ -4,9 +4,9 @@ import 'package:searchimages/utils/widget-based.dart';
 import 'package:searchimages/widgets/appbar/BaseAppBar.dart';
 
 class AppBarHome extends BaseAppBar {
-  final ValueChanged<String> onSearchQuerySet;
+  final ValueChanged<String> onSearchButtonPressed;
 
-  AppBarHome({@required this.onSearchQuerySet});
+  AppBarHome({@required this.onSearchButtonPressed});
 
   @override
   State<StatefulWidget> createState() => _AppBarHomeState();
@@ -25,7 +25,7 @@ class _AppBarHomeState extends State<AppBarHome> {
   void _handleOnSearchButtonPressed() {
     if (_isSearchState) {
       _removeFocusFromSearchField();
-      return widget.onSearchQuerySet(_searchQueryFieldController.text);
+      return widget.onSearchButtonPressed(_searchQueryFieldController.text);
     }
 
     _toggleSearchState();
@@ -68,13 +68,24 @@ class _AppBarHomeState extends State<AppBarHome> {
   }
 
   Widget _buildSearchField() {
-    return TextField(
-      controller: _searchQueryFieldController,
-      textInputAction: TextInputAction.search,
-      onSubmitted: widget.onSearchQuerySet,
-      decoration: InputDecoration(
-        hintText: 'Search...',
-        border: InputBorder.none,
+    final TextStyle textStyle = TextStyle(color: Colors.white);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: lightenColor(Theme.of(context).primaryColor, 0.05),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0),
+      child: TextField(
+        controller: _searchQueryFieldController,
+        textInputAction: TextInputAction.search,
+        onSubmitted: widget.onSearchButtonPressed,
+        style: textStyle,
+        decoration: InputDecoration(
+          hintText: 'Search...',
+          hintStyle: textStyle,
+          border: InputBorder.none,
+        ),
       ),
     );
   }
