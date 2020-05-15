@@ -5,6 +5,8 @@ import 'package:searchimages/database/controllers/searchQueries.dart'
     as searchQueries;
 import 'package:searchimages/database/models/SearchQuery.dart';
 
+typedef CompareToFunction = int Function(SearchQuery, SearchQuery);
+
 class SearchHistory extends StatefulWidget {
   final String filterUsingSearchQuery;
 
@@ -15,11 +17,24 @@ class SearchHistory extends StatefulWidget {
 }
 
 class _SearchHistoryState extends State<SearchHistory> {
-  final List<SearchQuery> _searchHistory = new List<SearchQuery>();
+  final CompareToFunction historySortAlgorithm =
+      (a, b) => SearchQuery.compareToUsingDateTime(
+            a,
+            b,
+            sortTechnique: SortTechnique.desc,
+          );
+
+  List<SearchQuery> _searchHistory = new List<SearchQuery>();
 
   @override
   void initState() {
     super.initState();
+    _fetchSearchHistory();
+  }
+
+  @override
+  void didUpdateWidget(SearchHistory oldWidget) {
+    super.didUpdateWidget(oldWidget);
     _fetchSearchHistory();
   }
 
@@ -32,6 +47,7 @@ class _SearchHistoryState extends State<SearchHistory> {
   Widget _buildSearchHistoryRow(BuildContext builderContext, int index) {
     final SearchQuery searchQuery = _searchHistory[index];
     return ListTile(
+      contentPadding: EdgeInsets.only(left: 24.0, right: 12.0),
       title: Text(searchQuery.query),
       trailing: IconButton(
         icon: Icon(Icons.delete_outline),
@@ -42,15 +58,18 @@ class _SearchHistoryState extends State<SearchHistory> {
 
   void _deleteSearchQuery(SearchQuery searchQuery) {
     searchQueries.deleteSearchQuery(searchQuery.query);
+    _fetchSearchHistory();
   }
 
   void _fetchSearchHistory() async {
     List<SearchQuery> searchQueryList =
         await searchQueries.getAllSearchQueries();
 
+    searchQueryList.sort(historySortAlgorithm);
+
     if (this.mounted) {
       setState(() {
-        _searchHistory.addAll(searchQueryList);
+        _searchHistory = List<SearchQuery>.from(searchQueryList);
       });
     }
   }
