@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:searchimages/database/models/main.dart' as models;
 import 'package:searchimages/utils/typedefs.dart';
 import 'package:searchimages/widgets/appbar/AppBar-SearchPage.dart';
-import 'package:searchimages/widgets/home_page/widgets/SearchResults.dart';
+import 'package:searchimages/widgets/search_page/widgets/search_results/SearchResults.dart';
 import 'package:searchimages/widgets/search_page/utils/SearchPageMode.dart';
 import 'package:searchimages/widgets/search_page/widgets/SearchHistory.dart';
 
