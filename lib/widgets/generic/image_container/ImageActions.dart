@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:searchimages/models/main.dart' as models;
-import 'package:searchimages/controllers/favorites.dart' as favorites;
+import 'package:searchimages/database/models/main.dart' as models;
+import 'package:searchimages/database/controllers/favorites.dart' as favorites;
 
 class ImageActions extends StatefulWidget {
-  final models.Image _image;
+  final models.ImageModel _image;
 
   ImageActions(this._image);
 
@@ -26,12 +26,12 @@ class _ImageActionsState extends State<ImageActions> {
     _updateAlreadyFavorite();
   }
 
-  void _addToFavorites(models.Image image) async {
+  void _addToFavorites(models.ImageModel image) async {
     await favorites.createFavorite(image);
     _updateAlreadyFavorite();
   }
 
-  void _removeFromFavorites(models.Image image) async {
+  void _removeFromFavorites(models.ImageModel image) async {
     await favorites.deleteFavorite(image);
     _updateAlreadyFavorite();
   }

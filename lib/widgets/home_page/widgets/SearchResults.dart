@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:searchimages/models/main.dart' as models;
+import 'package:searchimages/database/models/main.dart' as models;
 import 'package:searchimages/widgets/home_page/widgets/image_grid_view/ImageGridView.dart';
 
 class SearchResults extends StatelessWidget {
-  final List<models.Image> imageList;
+  final List<models.ImageModel> imageList;
   final bool isLoadingData;
   final VoidCallback onFetchMoreDataRequested;
 

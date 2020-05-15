@@ -1,8 +1,8 @@
 import 'package:sqflite/sqflite.dart' as sqlite;
 
 import 'package:searchimages/database/main.dart' show initDb;
-import 'package:searchimages/models/Favorite.dart' show Favorite;
-import 'package:searchimages/models/Image.dart' show Image;
+import 'package:searchimages/database/models/Favorite.dart' show Favorite;
+import 'package:searchimages/database/models/Image.dart' show ImageModel;
 
 const String TABLE_NAME = 'favorites';
 
@@ -15,7 +15,7 @@ Future<sqlite.Database> init() async {
   return db;
 }
 
-Future<Favorite> createFavorite(Image image) async {
+Future<Favorite> createFavorite(ImageModel image) async {
   sqlite.Database db = await init();
   final Favorite favorite = Favorite(image.id);
 
@@ -33,13 +33,13 @@ Future<List<Favorite>> getAllFavorites() async {
   return Favorite.fromMaps(maps);
 }
 
-Future<void> deleteFavorite(Image image) async {
+Future<void> deleteFavorite(ImageModel image) async {
   sqlite.Database db = await init();
 
   return db.delete(TABLE_NAME, where: 'image= ?', whereArgs: [image.id]);
 }
 
-Future<bool> isImageFavorite(Image image) async {
+Future<bool> isImageFavorite(ImageModel image) async {
   sqlite.Database db = await init();
 
   List<Map<String, dynamic>> results =

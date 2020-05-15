@@ -1,15 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:searchimages/models/main.dart' as models;
-import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
+import 'package:searchimages/database/models/main.dart' as models;
+import 'package:searchimages/database/models/Image.dart' show ImageUrlTypes;
 import 'package:searchimages/utils/ImageDownloader.dart';
 import 'package:searchimages/widgets/dialogs/image_download/ImageDownloadDialog-Body.dart';
 import 'package:searchimages/widgets/dialogs/image_download/ImageDownloadDialog-Footer.dart';
 import 'package:searchimages/widgets/dialogs/image_download/ImageDownloadDialog-Title.dart';
 
 class ImageDownloadDialog extends StatefulWidget {
-  final models.Image _image;
+  final models.ImageModel _image;
 
   ImageDownloadDialog(this._image);
 

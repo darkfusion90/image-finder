@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:searchimages/models/main.dart' as models;
-import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
+import 'package:searchimages/database/models/main.dart' as models;
+import 'package:searchimages/database/models/Image.dart' show ImageUrlTypes;
 import 'package:searchimages/widgets/generic/image_container/ImageContainer.dart';
 import 'package:searchimages/widgets/dialogs/image_download/ImageDownloadDialog.dart';
 import 'package:searchimages/widgets/appbar/AppBar-ImageDetails.dart';
 
 class ImageDetails extends StatelessWidget {
-  final models.Image _image;
+  final models.ImageModel _image;
 
   ImageDetails(this._image);
 

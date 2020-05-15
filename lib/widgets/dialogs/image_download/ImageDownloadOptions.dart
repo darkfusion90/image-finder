@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:searchimages/models/main.dart' as models;
-import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
+import 'package:searchimages/database/models/main.dart' as models;
+import 'package:searchimages/database/models/Image.dart' show ImageUrlTypes;
 
 class ImageDownloadOptions extends StatelessWidget {
   final List<ImageUrlTypes> _imageDownloadOptions = [
@@ -12,7 +12,7 @@ class ImageDownloadOptions extends StatelessWidget {
     ImageUrlTypes.SMALL,
   ];
 
-  final models.Image _image;
+  final models.ImageModel _image;
   final Color fontColor;
   final ImageUrlTypes _selectedRadio;
   final ValueChanged<ImageUrlTypes> _onSelectedDownloadOptionChanged;

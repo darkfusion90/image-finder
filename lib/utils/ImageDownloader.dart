@@ -5,14 +5,14 @@ import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:dio/dio.dart';
 
-import 'package:searchimages/models/main.dart' as models;
-import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
+import 'package:searchimages/database/models/main.dart' as models;
+import 'package:searchimages/database/models/Image.dart' show ImageUrlTypes;
 
 class ImageDownloader {
   static const String _APPLICATION_DOWNLOADS_DIRECTORY = 'image-finder';
   final Dio _dio = Dio();
   final DateFormat _formatter = DateFormat('yyyyMMdd_HHmmss');
-  final models.Image _image;
+  final models.ImageModel _image;
   final ImageUrlTypes _imageUrlType;
   final Function(int, int) _onDownloadProgress;
 

@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
-import 'package:searchimages/models/main.dart' as models;
+import 'package:searchimages/database/models/Image.dart' show ImageUrlTypes;
+import 'package:searchimages/database/models/main.dart' as models;
 
 class ImageContainer extends StatelessWidget {
-  final models.Image _image;
+  final models.ImageModel _image;
   final ImageUrlTypes imageDisplaySize;
 
   ImageContainer(this._image, {this.imageDisplaySize = ImageUrlTypes.THUMB});

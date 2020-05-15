@@ -6,7 +6,7 @@ const Map<ImageUrlTypes, int> IMAGE_WIDTHS = {
   ImageUrlTypes.THUMB: 200,
 };
 
-class Image {
+class ImageModel {
   final String id;
   final String altDesc;
   final int width;
@@ -14,12 +14,12 @@ class Image {
   final Map<String, dynamic> urls;
   double aspectRatio;
 
-  Image(this.id, this.width, this.height, this.urls, this.altDesc) {
+  ImageModel(this.id, this.width, this.height, this.urls, this.altDesc) {
     this.aspectRatio = this.width / this.height;
   }
 
-  factory Image.fromJson(Map<String, dynamic> json) {
-    return Image(
+  factory ImageModel.fromJson(Map<String, dynamic> json) {
+    return ImageModel(
       json['id'],
       json['width'],
       json['height'],
@@ -28,10 +28,10 @@ class Image {
     );
   }
 
-  static List<Image> fromJsonList(List<Map<String, dynamic>> jsonList) {
-    return List<Image>.generate(
+  static List<ImageModel> fromJsonList(List<Map<String, dynamic>> jsonList) {
+    return List<ImageModel>.generate(
       jsonList.length,
-      (index) => Image.fromJson(jsonList[index]),
+      (index) => ImageModel.fromJson(jsonList[index]),
     );
   }
 

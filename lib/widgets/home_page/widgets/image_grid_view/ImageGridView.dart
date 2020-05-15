@@ -2,10 +2,10 @@ import'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'ImageGridTile.dart' show ImageGridTile;
-import 'package:searchimages/models/main.dart' as models;
+import 'package:searchimages/database/models/main.dart' as models;
 
 class ImageGridView extends StatefulWidget {
-  final List<models.Image> _imageList;
+  final List<models.ImageModel> _imageList;
   final VoidCallback _fetchMoreData;
 
   ImageGridView(this._imageList, this._fetchMoreData);

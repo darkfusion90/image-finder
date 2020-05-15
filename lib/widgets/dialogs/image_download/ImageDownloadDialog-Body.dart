@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:searchimages/models/Image.dart' show ImageUrlTypes;
-import 'package:searchimages/models/main.dart' as models;
+import 'package:searchimages/database/models/Image.dart' show ImageUrlTypes;
+import 'package:searchimages/database/models/main.dart' as models;
 import 'ImageDownloadOptions.dart';
 
 class ImageDownloadDialogBody extends StatelessWidget {
-  final models.Image _image;
+  final models.ImageModel _image;
   final ImageUrlTypes _selectedDownloadOption;
   final ValueChanged<ImageUrlTypes> _onSelectedDownloadOptionChanged;
   final Color _fontColor;
