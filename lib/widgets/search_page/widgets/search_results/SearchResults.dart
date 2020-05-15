@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:searchimages/database/models/main.dart' as models;
-import 'package:searchimages/widgets/home_page/widgets/image_grid_view/ImageGridView.dart';
+import 'image_grid_view/ImageGridView.dart';
 
 class SearchResults extends StatelessWidget {
   final List<models.ImageModel> imageList;

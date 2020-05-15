@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:searchimages/database/models/main.dart' as models;
 import 'package:searchimages/widgets/generic/image_container/ImageContainer.dart';
 import 'package:searchimages/widgets/image_details/ImageDetails.dart';
-import '../../../generic/image_container/ImageActions.dart' show ImageActions;
+import 'package:searchimages/widgets/generic/image_container/ImageActions.dart'
+    show ImageActions;
 
 class ImageGridTile extends StatelessWidget {
   final models.ImageModel _image;
