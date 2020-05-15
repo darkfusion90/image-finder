@@ -1,3 +1,5 @@
+enum SortTechnique { asc, desc }
+
 class SearchQuery {
   int id;
   final String query;
@@ -30,6 +32,26 @@ class SearchQuery {
       maps.length,
       (index) => fromMap(maps[index]),
     );
+  }
+
+  static int compareToUsingDateTime(
+    SearchQuery a,
+    SearchQuery b, {
+    SortTechnique sortTechnique = SortTechnique.asc,
+  }) {
+    switch (sortTechnique) {
+      case SortTechnique.asc:
+        return _compareTo(a, b);
+      case SortTechnique.desc:
+        return _compareTo(b, a);
+      default:
+        throw Exception(
+            'Unknown SortTechnique: $sortTechnique. Unable to proceed any further');
+    }
+  }
+
+  static int _compareTo(SearchQuery a, SearchQuery b) {
+    return a.queryDateTime.compareTo(b.queryDateTime);
   }
 
   @override
