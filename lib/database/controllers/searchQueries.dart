@@ -4,11 +4,16 @@ import 'package:searchimages/database/main.dart' show initDb;
 import 'package:searchimages/database/models/SearchQuery.dart';
 
 const String TABLE_NAME = 'searchqueries';
+const String UniqueNonNullStringColumn = 'VARCHAR(255) UNIQUE NOT NULL';
 
 Future<sqlite.Database> init() async {
   final sqlite.Database db = await initDb().getDatabase();
   await db.execute(
-    'CREATE TABLE IF NOT EXISTS $TABLE_NAME(id INTEGER PRIMARY KEY AUTOINCREMENT, image VARCHAR(255) UNIQUE NOT NULL)',
+    'CREATE TABLE IF NOT EXISTS $TABLE_NAME('
+    'id INTEGER PRIMARY KEY AUTOINCREMENT, '
+    'query $UniqueNonNullStringColumn, '
+    'queriedOn $UniqueNonNullStringColumn'
+    ')',
   );
 
   return db;
