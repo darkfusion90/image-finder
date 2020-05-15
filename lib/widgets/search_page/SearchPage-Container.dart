@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
+import 'package:searchimages/database/controllers/searchQueries.dart'
+    as dbSearchQueries;
 import 'package:searchimages/database/models/main.dart' as models;
 import 'package:searchimages/utils/api.dart' as api;
 import 'package:searchimages/utils/widget-based.dart';
@@ -34,6 +36,7 @@ class _SearchPageContainerState extends State<SearchPageContainer> {
   }
 
   void _handleOnSearchButtonPressed(String searchQuery) {
+    dbSearchQueries.createSearchQuery(searchQuery);
     setState(() {
       _searchQuery = searchQuery;
       _searchPageMode = SearchPageMode.searching;
@@ -50,7 +53,7 @@ class _SearchPageContainerState extends State<SearchPageContainer> {
     } else {
       this._setWillPopResult(WillPopResult.pop);
     }
-    
+
     this._setSearchPageMode(SearchPageMode.editingSearchQuery);
   }
 
