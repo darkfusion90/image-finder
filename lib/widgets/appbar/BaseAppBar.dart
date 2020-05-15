@@ -5,6 +5,10 @@ abstract class BaseAppBar extends StatefulWidget
     implements PreferredSizeWidget {
   @override
   final Size preferredSize;
+  final PreferredSizeWidget bottom;
 
-  BaseAppBar() : preferredSize = Size.fromHeight(kToolbarHeight);
+  BaseAppBar({this.bottom})
+      : preferredSize = Size.fromHeight(
+          kToolbarHeight + (bottom?.preferredSize?.height ?? 0),
+        );
 }
