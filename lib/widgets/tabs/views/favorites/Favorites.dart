@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:searchimages/database/models/Favorite.dart';
 import 'package:searchimages/database/controllers/favorites.dart'
     as favoritesDb;
-import 'package:searchimages/widgets/generic/image_container/ImageContainer.dart';
-import 'package:searchimages/utils/api.dart' as api;
-import 'package:searchimages/widgets/search_page/widgets/search_results/image_grid_view/ImageGridView.dart';
+import 'package:searchimages/widgets/tabs/views/favorites/FavoritesImageGridView.dart';
 
 class FavoritesTab extends StatefulWidget {
   @override
@@ -29,11 +27,20 @@ class _FavoritesTabState extends State<FavoritesTab> {
     );
   }
 
-  Widget _futureFavoritesBuilder(BuildContext context, AsyncSnapshot snapshot) {
+  Widget _futureFavoritesBuilder(
+    BuildContext context,
+    AsyncSnapshot<List<Favorite>> snapshot,
+  ) {
     if (snapshot.connectionState == ConnectionState.done) {
-      _buildFavorites(snapshot.data);
+      print('snapshot: ${snapshot.data}');
+      return FavoritesImageGridView(
+        favorites: snapshot.data,
+        loaderWidget: _buildLoader(),
+        errorWidget: _buildError(),
+        onRefresh: _getFavoriteList,
+      );
     } else if (snapshot.hasError) {
-      _buildError();
+      return _buildError();
     }
 
     return _buildLoader();
@@ -41,10 +48,6 @@ class _FavoritesTabState extends State<FavoritesTab> {
 
   Widget _buildLoader() {
     return Center(child: CircularProgressIndicator());
-  }
-
-  Widget _buildFavorites(List<Favorite> favorites) {
-    return Text('YAY');
   }
 
   Widget _buildError() {
