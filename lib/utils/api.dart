@@ -24,7 +24,7 @@ Future<List<ImageModel>> fetchImages(String query, int pageNumber) async {
 
       List<dynamic> decodedJsonResults = responseJson['results'];
       List<ImageModel> images =
-          decodedJsonResults.map((res) => ImageModel.fromJson(res)).toList();
+          decodedJsonResults.map((res) => ImageModel.fromMap(res)).toList();
       print('images: $images');
       return images;
     } else {
@@ -38,5 +38,5 @@ Future<List<ImageModel>> fetchImages(String query, int pageNumber) async {
 Future<ImageModel> fetchImage(String imageId) async {
   final response = await http.get(constructUrl('/photos/$imageId'));
 
-  return ImageModel.fromJson(jsonDecode(response.body));
+  return ImageModel.fromMap(jsonDecode(response.body));
 }
