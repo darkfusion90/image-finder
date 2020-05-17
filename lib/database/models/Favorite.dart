@@ -33,6 +33,6 @@ class Favorite {
 
   @override
   String toString() {
-    return "{'id': $id, 'image': $imageId}\n";
+    return "{'id': $id, 'imageId': $imageId}\n";
   }
 }
