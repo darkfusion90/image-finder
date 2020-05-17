@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:searchimages/utils/widget-based.dart';
 import 'package:searchimages/widgets/appbar/BaseAppBar.dart';
@@ -7,10 +8,12 @@ import 'package:searchimages/widgets/appbar/BaseAppBar.dart';
 class AppBarSearchPage extends BaseAppBar {
   final ValueChanged<String> onSearchButtonPressed;
   final VoidCallback onSearchFieldFocused;
+  final TextEditingController searchFieldTextController;
 
   AppBarSearchPage({
     @required this.onSearchButtonPressed,
     @required this.onSearchFieldFocused,
+    @required this.searchFieldTextController,
   });
 
   @override
@@ -18,21 +21,18 @@ class AppBarSearchPage extends BaseAppBar {
 }
 
 class _AppBarSearchPage extends State<AppBarSearchPage> {
-  final _searchQueryFieldController = TextEditingController();
+  final FocusNode _searchFieldFocusNode = FocusNode();
 
-  void _handleOnSearchButtonPressed() {
-    _removeFocusFromSearchField();
-    return widget.onSearchButtonPressed(_searchQueryFieldController.text);
+  @override
+  void initState() {
+    super.initState();
+    _requestFocusOnSearchField(this.context);
   }
 
-  void _handleSearchFieldFocusChange(bool hasFocus) {
-    if (!hasFocus) return;
-
-    widget.onSearchFieldFocused();
-  }
-
-  void _removeFocusFromSearchField() {
-    requestFocus(context);
+  @override
+  void dispose() {
+    _searchFieldFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,7 +55,8 @@ class _AppBarSearchPage extends State<AppBarSearchPage> {
         ),
         padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0),
         child: TextField(
-          controller: _searchQueryFieldController,
+          controller: widget.searchFieldTextController,
+          focusNode: _searchFieldFocusNode,
           textInputAction: TextInputAction.search,
           onSubmitted: widget.onSearchButtonPressed,
           style: textStyle,
@@ -74,5 +75,26 @@ class _AppBarSearchPage extends State<AppBarSearchPage> {
       icon: Icon(Icons.search),
       onPressed: _handleOnSearchButtonPressed,
     );
+  }
+
+  void _handleOnSearchButtonPressed() {
+    _removeFocusFromSearchField();
+    return widget.onSearchButtonPressed(widget.searchFieldTextController.text);
+  }
+
+  void _handleSearchFieldFocusChange(bool hasFocus) {
+    if (!hasFocus) return;
+
+    widget.onSearchFieldFocused();
+  }
+
+  void _removeFocusFromSearchField() {
+    _searchFieldFocusNode.unfocus();
+  }
+
+  void _requestFocusOnSearchField(BuildContext context) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(_searchFieldFocusNode);
+    });
   }
 }
