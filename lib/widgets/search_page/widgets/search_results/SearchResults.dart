@@ -24,7 +24,10 @@ class SearchResults extends StatelessWidget {
       return _buildEmptySearchResults();
     }
 
-    return ImageGridView(imageList, onFetchMoreDataRequested);
+    return ImageGridView(
+      imageList,
+      fetchMoreData: onFetchMoreDataRequested,
+    );
   }
 
   Widget _buildLoader() {
