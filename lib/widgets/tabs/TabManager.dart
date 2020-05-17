@@ -18,7 +18,10 @@ class TabManager extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(length: 2, child: _buildContent(context));
+    return DefaultTabController(
+      length: tabDataList.length,
+      child: _buildContent(context),
+    );
   }
 
   Widget _buildContent(BuildContext context) {
