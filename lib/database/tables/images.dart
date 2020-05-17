@@ -4,7 +4,7 @@ const String tableName = 'images';
 
 const String columnNameId = 'id';
 const String columnNameImageUrlId = 'imageUrlId';
-const String columnNameAltDesc = 'altDesc';
+const String columnNameAltDesc = 'alt_description';
 const String columnNameWidth = 'width';
 const String columnNameHeight = 'height';
 
@@ -18,7 +18,7 @@ const String _foreignKeyDescription =
 final String createTableStatement = 'CREATE TABLE IF NOT EXISTS $tableName('
     '$columnNameId VARCHAR(255) PRIMARY KEY, '
     '$columnNameImageUrlId VARCHAR(255) UNIQUE NOT NULL, '
-    '$columnNameAltDesc VARCHAR(255) NOT NULL, '
+    '$columnNameAltDesc VARCHAR(255), '
     '$columnNameWidth INTEGER NOT NULL, '
     '$columnNameHeight INTEGER NOT NULL,'
     '$_foreignKeyDescription '
