@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:searchimages/database/models/Image.dart' as models;
+import 'package:searchimages/database/models/Image.dart' show ImageModel;
 
 const String UNSPLASH_HOME = 'https://api.unsplash.com';
 const String ACCESS_TOKEN = 'zBbkwz06KIzPAhpxwhhAebWgSOuDavbMZJdnVo91uVo';
@@ -11,10 +11,11 @@ String constructUrl(subUrl) {
 }
 
 Future<http.Response> _searchImages(String query, int pageNumber) {
-  return http.get(constructUrl('/search/photos/?query=$query&page=$pageNumber'));
+  return http
+      .get(constructUrl('/search/photos/?query=$query&page=$pageNumber'));
 }
 
-Future<List<models.ImageModel>> fetchImages(String query, int pageNumber) async {
+Future<List<ImageModel>> fetchImages(String query, int pageNumber) async {
   final response = await _searchImages(query, pageNumber);
 
   try {
@@ -22,9 +23,9 @@ Future<List<models.ImageModel>> fetchImages(String query, int pageNumber) async 
       final responseJson = jsonDecode(response.body);
 
       List<dynamic> decodedJsonResults = responseJson['results'];
-      List<models.ImageModel> images =
-          decodedJsonResults.map((res) => models.ImageModel.fromJson(res)).toList();
-    print('images: $images');
+      List<ImageModel> images =
+          decodedJsonResults.map((res) => ImageModel.fromJson(res)).toList();
+      print('images: $images');
       return images;
     } else {
       throw Exception('error fetching images: ' + response.body);
@@ -32,4 +33,10 @@ Future<List<models.ImageModel>> fetchImages(String query, int pageNumber) async 
   } catch (on, stackTrace) {
     print('Exception: $on\nStack Trace: $stackTrace');
   }
+}
+
+Future<ImageModel> fetchImage(String imageId) async {
+  final response = await http.get(constructUrl('/photos/$imageId'));
+
+  return ImageModel.fromJson(jsonDecode(response.body));
 }
