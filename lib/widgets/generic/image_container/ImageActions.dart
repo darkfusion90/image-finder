@@ -26,6 +26,43 @@ class _ImageActionsState extends State<ImageActions> {
     _updateAlreadyFavorite();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: _buildActions(),
+      ),
+    );
+  }
+
+  List<Widget> _buildActions() {
+    return [
+      Tooltip(
+        child: IconButton(
+          padding: EdgeInsets.all(0),
+          icon: _buildFavoriteIcon(),
+          onPressed: _handleOnFavoriteIconButtonPressed,
+        ),
+        message: 'Add To Favorites',
+      )
+    ];
+  }
+
+  Icon _buildFavoriteIcon() {
+    return Icon(
+      this._isAlreadyFavorite ? Icons.favorite : Icons.favorite_border,
+    );
+  }
+
+  void _handleOnFavoriteIconButtonPressed() {
+    if (this._isAlreadyFavorite) {
+      _removeFromFavorites(widget._image);
+    } else {
+      _addToFavorites(widget._image);
+    }
+  }
+
   void _addToFavorites(models.ImageModel image) async {
     await favorites.createFavorite(image);
     _updateAlreadyFavorite();
@@ -38,39 +75,14 @@ class _ImageActionsState extends State<ImageActions> {
 
   void _updateAlreadyFavorite() async {
     bool isFav = await favorites.isImageFavorite(widget._image);
-    setState(() {
+    _safeSetState(() {
       _isAlreadyFavorite = isFav;
     });
   }
 
-  Icon _getFavoriteIcon() {
-    return Icon(
-      this._isAlreadyFavorite ? Icons.favorite : Icons.favorite_border,
-    );
-  }
+  void _safeSetState(Function fn) {
+    if (!this.mounted) return;
 
-  List<Widget> _buildActions() {
-    return [
-      Tooltip(
-        child: IconButton(
-          padding: EdgeInsets.all(0),
-          icon: _getFavoriteIcon(),
-          onPressed: () => this._isAlreadyFavorite
-              ? _removeFromFavorites(widget._image)
-              : _addToFavorites(widget._image),
-        ),
-        message: 'Add To Favorites',
-      )
-    ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: _buildActions(),
-      ),
-    );
+    setState(fn);
   }
 }
