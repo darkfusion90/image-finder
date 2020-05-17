@@ -18,7 +18,36 @@ Future<void> insertImage(ImageModel imageModel) async {
 
   await db.insert(
     imagesTable.tableName,
-    imageModel.toDbJson(),
+    imageModel.toDbMap(),
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
+}
+
+Future<Map<String, dynamic>> _getRawImage(String imageId) async {
+  Database db = await _init();
+  List<Map<String, dynamic>> results = await db.query(
+    imagesTable.tableName,
+    where: '${imagesTable.columnNameId}= ?',
+    whereArgs: [imageId],
+  );
+
+  return results.isEmpty ? null : results[0];
+}
+
+Future<Map<String, dynamic>> _getImageUrlsForRawImage(
+    Map<String, dynamic> rawImage) async {
+  return imageUrlsController.getImageUrl(
+    rawImage[imagesTable.columnNameImageUrlId],
+  );
+}
+
+Future<ImageModel> getImage(String imageId) async {
+  Map<String, dynamic> rawImage = await _getRawImage(imageId);
+  Map<String, dynamic> rawImageUrls = await _getImageUrlsForRawImage(rawImage);
+
+  // The value rawImage is apparently an immutable Map, hence cloning to put the additional key
+  Map<String, dynamic> rawImageClone = Map.from(rawImage);
+  rawImageClone.putIfAbsent('urls', () => rawImageUrls);
+
+  return ImageModel.fromMap(rawImageClone);
 }
