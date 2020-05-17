@@ -40,6 +40,7 @@ class _SearchPageContainerState extends State<SearchPageContainer> {
       onSearchHistoryItemTapped: _handleOnSearchHistoryItemTapped,
       onSearchFieldFocused: _handleOnSearchFieldFocused,
       onFetchMoreDataRequested: _fetchData,
+      onRefresh: () => _fetchData(shouldFetchFreshData: true),
     );
   }
 
@@ -81,17 +82,17 @@ class _SearchPageContainerState extends State<SearchPageContainer> {
   }
 
   void _performSearch(String newSearchQuery) {
-    dbSearchQueries.createSearchQuery(newSearchQuery);
     setState(() {
       _searchPageMode = SearchPageMode.searching;
     });
 
     if (!_isSearchQueryEmpty()) {
+      dbSearchQueries.createSearchQuery(newSearchQuery);
       _fetchData(shouldFetchFreshData: true);
     }
   }
 
-  void _fetchData({bool shouldFetchFreshData = false}) async {
+  Future<void> _fetchData({bool shouldFetchFreshData = false}) async {
     _setStateBeforeLoading(shouldFetchFreshData);
 
     List newData =

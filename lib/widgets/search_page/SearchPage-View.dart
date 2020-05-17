@@ -19,6 +19,7 @@ class SearchPageView extends StatelessWidget {
   final ValueChanged<String> onSearchHistoryItemTapped;
   final VoidCallback onSearchFieldFocused;
   final VoidCallback onFetchMoreDataRequested;
+  final VoidCallback onRefresh;
 
   SearchPageView({
     @required this.imageList,
@@ -30,6 +31,7 @@ class SearchPageView extends StatelessWidget {
     @required this.onSearchHistoryItemTapped,
     @required this.onSearchFieldFocused,
     @required this.onFetchMoreDataRequested,
+    @required this.onRefresh,
   });
 
   @override
@@ -66,6 +68,7 @@ class SearchPageView extends StatelessWidget {
       imageList: imageList,
       isLoadingData: isLoadingData,
       onFetchMoreDataRequested: onFetchMoreDataRequested,
+      onRefresh: onRefresh,
     );
   }
 }
