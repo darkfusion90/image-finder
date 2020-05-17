@@ -1,4 +1,4 @@
-import'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import 'ImageGridTile.dart' show ImageGridTile;
@@ -6,9 +6,9 @@ import 'package:searchimages/database/models/main.dart' as models;
 
 class ImageGridView extends StatefulWidget {
   final List<models.ImageModel> _imageList;
-  final VoidCallback _fetchMoreData;
+  final VoidCallback fetchMoreData;
 
-  ImageGridView(this._imageList, this._fetchMoreData);
+  ImageGridView(this._imageList, {this.fetchMoreData});
 
   @override
   State<StatefulWidget> createState() => _ImageGridViewState();
@@ -75,7 +75,8 @@ class _ImageGridViewState extends State<ImageGridView> {
       setState(() {
         _visitedScrollEndPositions.add(scrollNotification.metrics.pixels);
       });
-      widget._fetchMoreData();
+      
+      if (widget.fetchMoreData != null) widget.fetchMoreData();
     }
 
     return false;
