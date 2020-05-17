@@ -1,3 +1,5 @@
+import 'package:searchimages/database/tables/favorites.dart' as favoritesTable;
+
 class Favorite {
   int id;
   final String imageId;
@@ -8,12 +10,18 @@ class Favorite {
     this.id = id;
   }
 
-  Map<String, dynamic> toMap() {
-    return {'id': id, 'image': imageId};
+  Map<String, dynamic> toDbMap() {
+    return {
+      favoritesTable.columnNameId: id,
+      favoritesTable.columnNameImageId: imageId,
+    };
   }
 
   static Favorite fromMap(Map<String, dynamic> map) {
-    return Favorite(map['image'], id: map['id']);
+    return Favorite(
+      map[favoritesTable.columnNameImageId],
+      id: map[favoritesTable.columnNameId],
+    );
   }
 
   static List<Favorite> fromMaps(List<Map<String, dynamic>> maps) {
