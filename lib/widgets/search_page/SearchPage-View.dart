@@ -12,22 +12,26 @@ class SearchPageView extends StatelessWidget {
   final List<models.ImageModel> imageList;
   final SearchPageMode searchPageMode;
   final bool isLoadingData;
+  final searchQueryFieldController;
+
   final FutureVoidCallback<bool> onWillPop;
-  
   final ValueChanged<String> onSearchButtonPressed;
+  final ValueChanged<String> onSearchHistoryItemTapped;
   final VoidCallback onSearchFieldFocused;
   final VoidCallback onFetchMoreDataRequested;
-  
+
   SearchPageView({
     @required this.imageList,
     @required this.searchPageMode,
     @required this.isLoadingData,
+    @required this.searchQueryFieldController,
     @required this.onWillPop,
     @required this.onSearchButtonPressed,
+    @required this.onSearchHistoryItemTapped,
     @required this.onSearchFieldFocused,
     @required this.onFetchMoreDataRequested,
   });
-  
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -35,25 +39,28 @@ class SearchPageView extends StatelessWidget {
       child: Scaffold(
         appBar: AppBarSearchPage(
           onSearchButtonPressed: onSearchButtonPressed,
+          searchFieldTextController: searchQueryFieldController,
           onSearchFieldFocused: onSearchFieldFocused,
         ),
-        body: _buildBody(),
+        body: _buildBody(context),
       ),
     );
   }
-  
-  Widget _buildBody() {
+
+  Widget _buildBody(BuildContext context) {
     switch (searchPageMode) {
       case SearchPageMode.searching:
         return _buildSearchResults();
       case SearchPageMode.editingSearchQuery:
-        return SearchHistory();
+        return SearchHistory(
+          onSearchHistoryItemTapped: onSearchHistoryItemTapped,
+        );
       default:
         throw Exception(
-          'Unknown SearchPageMode detected: $searchPageMode; Cannot proceed to build widget');
+            'Unknown SearchPageMode detected: $searchPageMode; Cannot proceed to build widget');
     }
   }
-  
+
   Widget _buildSearchResults() {
     return SearchResults(
       imageList: imageList,

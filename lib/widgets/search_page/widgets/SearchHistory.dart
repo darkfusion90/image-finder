@@ -9,8 +9,12 @@ typedef CompareToFunction = int Function(SearchQuery, SearchQuery);
 
 class SearchHistory extends StatefulWidget {
   final String filterUsingSearchQuery;
+  final ValueChanged<String> onSearchHistoryItemTapped;
 
-  SearchHistory({this.filterUsingSearchQuery});
+  SearchHistory({
+    this.filterUsingSearchQuery,
+    @required this.onSearchHistoryItemTapped,
+  });
 
   @override
   State<StatefulWidget> createState() => _SearchHistoryState();
@@ -49,6 +53,7 @@ class _SearchHistoryState extends State<SearchHistory> {
     return ListTile(
       contentPadding: EdgeInsets.only(left: 24.0, right: 12.0),
       title: Text(searchQuery.query),
+      onTap: () => widget.onSearchHistoryItemTapped(searchQuery.query),
       trailing: IconButton(
         icon: Icon(Icons.delete_outline),
         onPressed: () => this._deleteSearchQuery(searchQuery),

@@ -17,10 +17,16 @@ class SearchPageContainer extends StatefulWidget {
 class _SearchPageContainerState extends State<SearchPageContainer> {
   SearchPageMode _searchPageMode = SearchPageMode.editingSearchQuery;
   WillPopResult _willPopResult = WillPopResult.pop;
-  String _searchQuery;
+  final _searchQueryFieldController = TextEditingController();
   bool _isLoadingData = false;
   int _pageNumber = 1;
   List<models.ImageModel> _imageList = new List<models.ImageModel>();
+
+  @override
+  void dispose() {
+    _searchQueryFieldController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,22 +35,21 @@ class _SearchPageContainerState extends State<SearchPageContainer> {
       searchPageMode: _searchPageMode,
       onWillPop: () => _handleWillPop(context),
       isLoadingData: _isLoadingData,
+      searchQueryFieldController: _searchQueryFieldController,
       onSearchButtonPressed: _handleOnSearchButtonPressed,
+      onSearchHistoryItemTapped: _handleOnSearchHistoryItemTapped,
       onSearchFieldFocused: _handleOnSearchFieldFocused,
       onFetchMoreDataRequested: _fetchData,
     );
   }
 
-  void _handleOnSearchButtonPressed(String searchQuery) {
-    dbSearchQueries.createSearchQuery(searchQuery);
-    setState(() {
-      _searchQuery = searchQuery;
-      _searchPageMode = SearchPageMode.searching;
-    });
+  void _handleOnSearchButtonPressed(String newSearchQuery) {
+    _performSearch(newSearchQuery);
+  }
 
-    if (!_isSearchQueryEmpty()) {
-      _fetchData(shouldFetchFreshData: true);
-    }
+  void _handleOnSearchHistoryItemTapped(String searchQueryItem) {
+    _searchQueryFieldController.text = searchQueryItem;
+    _performSearch(searchQueryItem);
   }
 
   void _handleOnSearchFieldFocused() {
@@ -75,10 +80,22 @@ class _SearchPageContainerState extends State<SearchPageContainer> {
     }
   }
 
+  void _performSearch(String newSearchQuery) {
+    dbSearchQueries.createSearchQuery(newSearchQuery);
+    setState(() {
+      _searchPageMode = SearchPageMode.searching;
+    });
+
+    if (!_isSearchQueryEmpty()) {
+      _fetchData(shouldFetchFreshData: true);
+    }
+  }
+
   void _fetchData({bool shouldFetchFreshData = false}) async {
     _setStateBeforeLoading(shouldFetchFreshData);
 
-    List newData = await api.fetchImages(_searchQuery, _pageNumber);
+    List newData =
+        await api.fetchImages(_searchQueryFieldController.text, _pageNumber);
 
     _setStateAfterLoading(newData);
   }
@@ -117,6 +134,6 @@ class _SearchPageContainerState extends State<SearchPageContainer> {
   }
 
   bool _isSearchQueryEmpty() {
-    return (_searchQuery ?? '').isEmpty;
+    return (_searchQueryFieldController.text ?? '').isEmpty;
   }
 }
