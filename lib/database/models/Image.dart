@@ -1,3 +1,5 @@
+import 'package:searchimages/database/tables/images.dart' as imagesTable;
+
 enum ImageUrlTypes { RAW, FULL, REGULAR, SMALL, THUMB }
 
 const Map<ImageUrlTypes, int> IMAGE_WIDTHS = {
@@ -33,6 +35,16 @@ class ImageModel {
       jsonList.length,
       (index) => ImageModel.fromJson(jsonList[index]),
     );
+  }
+
+  Map<String, dynamic> toDbJson() {
+    return {
+      imagesTable.columnNameId: this.id,
+      imagesTable.columnNameImageUrlId: this.getUrl(ImageUrlTypes.THUMB),
+      imagesTable.columnNameHeight: this.height,
+      imagesTable.columnNameWidth: this.width,
+      imagesTable.columnNameAltDesc: this.altDesc,
+    };
   }
 
   String getUrl(ImageUrlTypes urlType) {

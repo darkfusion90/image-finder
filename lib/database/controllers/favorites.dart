@@ -1,49 +1,54 @@
-import 'package:sqflite/sqflite.dart' as sqlite;
+import 'package:sqflite/sqflite.dart';
 
-import 'package:searchimages/database/main.dart' show initDb;
 import 'package:searchimages/database/models/Favorite.dart' show Favorite;
 import 'package:searchimages/database/models/Image.dart' show ImageModel;
+import 'package:searchimages/database/tables/favorites.dart' as favoritesTable;
+import 'package:searchimages/database/controllers/images.dart'
+    as imagesController;
+import 'package:searchimages/database/tables/main.dart';
+import 'package:searchimages/database/controllers/initControllerUtil.dart';
 
-const String TABLE_NAME = 'favorites';
-
-Future<sqlite.Database> init() async {
-  final sqlite.Database db = await initDb().getDatabase();
-  await db.execute(
-    'CREATE TABLE IF NOT EXISTS $TABLE_NAME(id INTEGER PRIMARY KEY AUTOINCREMENT, image VARCHAR(255) UNIQUE NOT NULL)',
-  );
-
-  return db;
+Future<Database> init() async {
+  return initDbControllerForTable(DatabaseTable.favorites);
 }
 
-Future<Favorite> createFavorite(ImageModel image) async {
-  sqlite.Database db = await init();
-  final Favorite favorite = Favorite(image.id);
+Future<Favorite> createFavorite(ImageModel imageModel) async {
+  await imagesController.insertImage(imageModel);
 
-  int id = await db.insert(TABLE_NAME, favorite.toMap(),
-      conflictAlgorithm: sqlite.ConflictAlgorithm.replace);
+  Database db = await init();
+  final Favorite favorite = Favorite(imageModel.id);
+
+  int id = await db.insert(favoritesTable.tableName, favorite.toDbMap());
 
   favorite.setId(id);
   return favorite;
 }
 
 Future<List<Favorite>> getAllFavorites() async {
-  sqlite.Database db = await init();
+  Database db = await init();
 
-  List<Map<String, dynamic>> maps = await db.query(TABLE_NAME);
+  List<Map<String, dynamic>> maps = await db.query(favoritesTable.tableName);
   return Favorite.fromMaps(maps);
 }
 
 Future<void> deleteFavorite(ImageModel image) async {
-  sqlite.Database db = await init();
+  Database db = await init();
 
-  return db.delete(TABLE_NAME, where: 'image= ?', whereArgs: [image.id]);
+  return db.delete(
+    favoritesTable.tableName,
+    where: '${favoritesTable.columnNameImageId}= ?',
+    whereArgs: [image.id],
+  );
 }
 
 Future<bool> isImageFavorite(ImageModel image) async {
-  sqlite.Database db = await init();
+  Database db = await init();
 
-  List<Map<String, dynamic>> results =
-      await db.query(TABLE_NAME, where: 'image= ?', whereArgs: [image.id]);
+  List<Map<String, dynamic>> results = await db.query(
+    favoritesTable.tableName,
+    where: '${favoritesTable.columnNameImageId}= ?',
+    whereArgs: [image.id],
+  );
 
   return results.isNotEmpty;
 }
