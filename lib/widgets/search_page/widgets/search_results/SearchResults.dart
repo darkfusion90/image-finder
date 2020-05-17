@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
 import 'package:searchimages/database/models/main.dart' as models;
-import 'image_grid_view/ImageGridView.dart';
+import 'package:searchimages/widgets/generic/image_grid_view/ImageGridView.dart';
 
 class SearchResults extends StatelessWidget {
   final List<models.ImageModel> imageList;
   final bool isLoadingData;
   final VoidCallback onFetchMoreDataRequested;
+  final VoidCallback onRefresh;
 
   const SearchResults({
     @required this.imageList,
     @required this.isLoadingData,
     @required this.onFetchMoreDataRequested,
+    @required this.onRefresh,
   });
 
   @override
@@ -26,7 +28,9 @@ class SearchResults extends StatelessWidget {
 
     return ImageGridView(
       imageList,
+      onRefresh: onRefresh,
       fetchMoreData: onFetchMoreDataRequested,
+      isInfiniteScroll: true,
     );
   }
 
