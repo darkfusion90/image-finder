@@ -16,3 +16,15 @@ Future<void> insertImageUrl(Map<String, dynamic> urlMap) async {
     conflictAlgorithm: ConflictAlgorithm.replace,
   );
 }
+
+Future<Map<String, dynamic>> getImageUrl(String imageThumbUrl) async {
+  Database db = await _init();
+
+  List<Map<String, dynamic>> results = await db.query(
+    imageUrlsTable.tableName,
+    where: '${imageUrlsTable.columnNameThumb}= ?',
+    whereArgs: [imageThumbUrl],
+  );
+
+  return results.isEmpty ? null : results[0];
+}
