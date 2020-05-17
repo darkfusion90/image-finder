@@ -20,24 +20,24 @@ class ImageModel {
     this.aspectRatio = this.width / this.height;
   }
 
-  factory ImageModel.fromJson(Map<String, dynamic> json) {
+  factory ImageModel.fromMap(Map<String, dynamic> map) {
     return ImageModel(
-      json['id'],
-      json['width'],
-      json['height'],
-      json['urls'],
-      json['alt_description'],
+      map['id'],
+      map['width'],
+      map['height'],
+      map['urls'],
+      map['alt_description'],
     );
   }
 
   static List<ImageModel> fromJsonList(List<Map<String, dynamic>> jsonList) {
     return List<ImageModel>.generate(
       jsonList.length,
-      (index) => ImageModel.fromJson(jsonList[index]),
+      (index) => ImageModel.fromMap(jsonList[index]),
     );
   }
 
-  Map<String, dynamic> toDbJson() {
+  Map<String, dynamic> toDbMap() {
     return {
       imagesTable.columnNameId: this.id,
       imagesTable.columnNameImageUrlId: this.getUrl(ImageUrlTypes.THUMB),
